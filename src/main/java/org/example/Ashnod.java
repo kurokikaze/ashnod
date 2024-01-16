@@ -35,6 +35,7 @@ public class Ashnod {
         Prototype proto = env.checkclosure().p;
 
         env.set("foo", LuaValue.valueOf("bar"));
+
         Iterator<String> metaKeys = meta.keys();
         while(metaKeys.hasNext()) {
             String key = metaKeys.next();
