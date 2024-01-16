@@ -1,3 +1,3 @@
 area = width * height
-processed = area > 10000
+bigEnough = area > 10000
 comment = "Mighty " .. source
