@@ -1,3 +1,3 @@
-area = 100.1 / 200
-processed = true
-text = "Finally, " .. bar
+area = width * height
+processed = area > 10000
+comment = "Mighty " .. source

@@ -28,21 +28,14 @@ public class Ashnod {
 
     protected JSONObject processItem(String script, JSONObject meta, JSONObject item) {
         Globals globals = JsePlatform.standardGlobals();
-        globals.set("foo", LuaValue.valueOf("bar"));
+        globals.set("foo", LuaValue.valueOf(12));
+
+        addFieldsToGlobal(globals, meta);
+        addFieldsToGlobal(globals, item);
 
         // Use the convenience function on the globals to load a chunk.
         LuaValue env = globals.load(script, "maven-example");
         Prototype proto = env.checkclosure().p;
-
-        env.set("foo", LuaValue.valueOf("bar"));
-
-        Iterator<String> metaKeys = meta.keys();
-        while(metaKeys.hasNext()) {
-            String key = metaKeys.next();
-            Object value = meta.get(key);
-//            env.set(key, LuaValue.valueOf(value));
-//            System.out.println(value);
-        }
 
         // Use any of the "call()" or "invoke()" functions directly on the chunk.
         env.call();
@@ -55,7 +48,7 @@ public class Ashnod {
             if (!value.isnil() && !value.istable()) {
                 LuaValue nakedValue = globals.get(identifier);
                 String type = LuaValue.TYPE_NAMES[nakedValue.type()];
-                System.out.println(identifier + ' ' + type);
+                // System.out.println(identifier + ' ' + type);
                 switch (type) {
                     case "number": {
                         item.put(identifier, nakedValue.optdouble(0));
@@ -69,13 +62,23 @@ public class Ashnod {
                         item.put(identifier, nakedValue.toboolean());
                     }
                 }
-//                System.out.println(identifier);
-//                System.out.println(globals.get(identifier));
-//                System.out.println(LuaValue.TYPE_NAMES[globals.get(identifier).type()]);
-//                item.put(identifier, globals.get(identifier));
             }
         }
 
         return item;
+    }
+
+    protected void addFieldsToGlobal(LuaValue globals, JSONObject obj) {
+        Iterator<String> metaKeys = obj.keys();
+        while(metaKeys.hasNext()) {
+            String key = metaKeys.next();
+            Object value = obj.get(key);
+
+            if (value instanceof Integer) {
+                globals.set(key, LuaValue.valueOf((Integer) value));
+            } else if (value instanceof String) {
+                globals.set(key, LuaValue.valueOf(value.toString()));
+            }
+        }
     }
 }
