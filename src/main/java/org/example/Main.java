@@ -4,11 +4,13 @@ import com.carstenGrammar.CarstenLexer;
 import com.carstenGrammar.CarstenParser;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.example.AshnodSetup.AshnodSetup;
 import org.example.ValueTree.RuleFile;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.Map;
 
 // Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
 // then press Enter. You can now see whitespace characters in your code.
@@ -28,15 +30,17 @@ public class Main {
         CarstenParser parser = new CarstenParser(tokens);
 
         ValueTreeVisitor visitor = new ValueTreeVisitor();
-        RuleFile ruleFile = visitor.visitMatcherFile(parser.matcherFile());
-        HashMap<String, Integer> variables = new HashMap<>();
+        AshnodSetup setup = visitor.visitMatcherFile(parser.matcherFile());
+
+        // Dump encountered top-level int variables into the map
+        HashMap<String, Integer> variables = new HashMap<>(setup.initialVariables.intVariables);
 
         variables.put("singlePrice", 14);
         variables.put("volume", 3);
         variables.put("posSum", 2);
 
-        if (!ruleFile.rules.isEmpty()) {
-            ruleFile.rules.get(0).run(variables);
+        if (!setup.ruleFile.rules.isEmpty()) {
+            setup.ruleFile.rules.get(0).run(variables);
 
             System.out.println(variables);
         }

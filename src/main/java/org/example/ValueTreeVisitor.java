@@ -6,6 +6,8 @@ import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.RuleNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
+import org.example.AshnodSetup.AshnodSetup;
+import org.example.AshnodSetup.InitialVariables;
 import org.example.ValueTree.*;
 
 import java.util.ArrayList;
@@ -21,20 +23,21 @@ public class ValueTreeVisitor implements CarstenVisitor {
     }
 
     @Override
-    public RuleFile visitMatcherFile(CarstenParser.MatcherFileContext ctx) {
+    public AshnodSetup visitMatcherFile(CarstenParser.MatcherFileContext ctx) {
         ArrayList<RuleBlock> rules = new ArrayList<>();
-
+        InitialVariables initialVariables = new InitialVariables();
         for (CarstenParser.MatcherRecordContext recordContext : ctx.matcherRecord()) {
-            System.out.println(recordContext.getText());
             if (recordContext.actionLine() != null) {
                 System.out.println("Action block");
+
             }
             if (recordContext.matcherBlock() != null) {
                 rules.add(this.visitMatcherBlock(recordContext.matcherBlock()));
             }
         }
+        RuleFile ruleFile = new RuleFile(rules);
 
-        return new RuleFile(rules);
+        return new AshnodSetup(ruleFile, initialVariables);
     }
 
 
