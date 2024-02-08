@@ -1,4 +1,4 @@
-if height > 150 then
+--[[if height > 150 then
     area = width * height * 2
 else
     area = width * height
@@ -41,3 +41,9 @@ comment = "Mighty " .. source
 word1 = "test"
 word2 = "tesx"
 tesst = 1332
+]]--
+if configParams and partNumber then
+    result = configParams + partNumber
+else
+    result = "Nope"
+end

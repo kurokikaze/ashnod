@@ -1,0 +1,15 @@
+{
+    _version = "0.1.0"
+    _creationDate = "2024-01-30"
+
+    [//*] {
+        positionPrice = singlePrice * (volume + 1)
+        posSum = Sum(sub(posSum)) + positionPrice
+    }
+
+    [productType="MobileSet"] {
+        posSumTemp = Sum(sub(posSum)) + positionPrice
+        specialDiscount = posSumTemp * mobDiscount
+        posSum = posSumTemp - specialDiscount
+    }
+}

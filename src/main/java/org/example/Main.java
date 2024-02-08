@@ -1,9 +1,14 @@
 package org.example;
 
+import com.carstenGrammar.CarstenLexer;
+import com.carstenGrammar.CarstenParser;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.example.ValueTree.RuleFile;
+
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Properties;
-import org.json.*;
+import java.util.HashMap;
 
 // Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
 // then press Enter. You can now see whitespace characters in your code.
@@ -15,25 +20,25 @@ public class Main {
 
         String scriptContent = "";
         try {
-            scriptContent = new String(Files.readAllBytes(Paths.get("src/script.lua")));
+            scriptContent = new String(Files.readAllBytes(Paths.get("src/script.crs")));
         } catch(Exception e) {}
 
-        Properties props = System.getProperties();
-        props.setProperty("org.luaj.luajc", "true");
+        CarstenLexer crsLexer = new CarstenLexer(CharStreams.fromString(scriptContent));
+        CommonTokenStream tokens = new CommonTokenStream(crsLexer);
+        CarstenParser parser = new CarstenParser(tokens);
 
-        Ashnod calculator = new Ashnod();
-        System.out.println("Calculation result:");
+        ValueTreeVisitor visitor = new ValueTreeVisitor();
+        RuleFile ruleFile = visitor.visitMatcherFile(parser.matcherFile());
+        HashMap<String, Integer> variables = new HashMap<>();
 
-        JSONObject result = calculator.calculate(scriptContent, readData("src/data/in.json"));
-        System.out.println(result.toString(4));
-    }
+        variables.put("singlePrice", 14);
+        variables.put("volume", 3);
+        variables.put("posSum", 2);
 
-    protected static JSONObject readData(String filename) {
-        String jsonContent = "";
-        try {
-            jsonContent = new String(Files.readAllBytes(Paths.get(filename)));
-        } catch(Exception e) {}
+        if (!ruleFile.rules.isEmpty()) {
+            ruleFile.rules.get(0).run(variables);
 
-        return new JSONObject(jsonContent);
+            System.out.println(variables);
+        }
     }
 }
