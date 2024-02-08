@@ -1,5 +1,7 @@
 package org.example.ValueTree;
 
+import org.example.ResultValue.NumericResultValue;
+
 import java.util.HashMap;
 
 public class MultiplicationNode implements ValueNode {
@@ -11,8 +13,10 @@ public class MultiplicationNode implements ValueNode {
     }
 
     @Override
-    public int getValue(HashMap<String, Integer> variables) {
-        System.out.println(left.getValue(variables) + " * " + right.getValue(variables));
-        return left.getValue(variables) * right.getValue(variables);
+    public NumericResultValue getValue(HashMap<String, Integer> variables) {
+        int leftValue = (int) left.getValue(variables).get();
+        int rightValue = (int) right.getValue(variables).get();
+        System.out.println(leftValue + " * " + rightValue);
+        return new NumericResultValue(leftValue * rightValue);
     }
 }

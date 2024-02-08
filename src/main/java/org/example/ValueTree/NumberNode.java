@@ -1,5 +1,7 @@
 package org.example.ValueTree;
 
+import org.example.ResultValue.NumericResultValue;
+
 import java.util.HashMap;
 
 public class NumberNode implements ValueNode {
@@ -10,7 +12,7 @@ public class NumberNode implements ValueNode {
     }
 
     @Override
-    public int getValue(HashMap<String, Integer> variables) {
-        return this.value;
+    public NumericResultValue getValue(HashMap<String, Integer> variables) {
+        return new NumericResultValue(this.value);
     }
 }

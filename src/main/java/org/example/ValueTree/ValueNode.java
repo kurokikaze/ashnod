@@ -1,7 +1,9 @@
 package org.example.ValueTree;
 
+import org.example.ResultValue.ResultValue;
+
 import java.util.HashMap;
 
 public interface ValueNode {
-    public int getValue(HashMap<String, Integer> variables);
+    public ResultValue getValue(HashMap<String, Integer> variables);
 }

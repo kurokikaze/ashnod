@@ -1,7 +1,7 @@
 package org.example.ValueTree;
 
-import com.sun.jdi.Value;
 import org.example.FunctionSet;
+import org.example.ResultValue.ResultValue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,7 +16,7 @@ public class FunctionCallNode implements ValueNode {
     }
 
     @Override
-    public int getValue(HashMap<String, Integer> variables) {
+    public ResultValue getValue(HashMap<String, Integer> variables) {
         switch (this.functionName) {
             case "Sum": {
                 return FunctionSet.Sum(new ArrayList<>(Arrays.asList(args)), variables);

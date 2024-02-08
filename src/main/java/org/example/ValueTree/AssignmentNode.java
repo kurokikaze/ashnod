@@ -1,6 +1,7 @@
 package org.example.ValueTree;
 
-import org.luaj.vm2.ast.Str;
+import org.example.ResultValue.NumericResultValue;
+import org.example.ResultValue.ResultValue;
 
 import java.util.HashMap;
 
@@ -14,7 +15,9 @@ public class AssignmentNode {
     }
 
     public void run(HashMap<String, Integer> variables) {
-        Integer result = this.value.getValue(variables);
-        variables.put(variableName, result);
+        ResultValue result = this.value.getValue(variables);
+        if (result instanceof NumericResultValue) {
+            variables.put(variableName, ((NumericResultValue) result).get());
+        }
     }
 }
