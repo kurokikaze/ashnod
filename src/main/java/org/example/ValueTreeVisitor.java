@@ -74,9 +74,10 @@ public class ValueTreeVisitor implements CarstenVisitor {
         for (CarstenParser.MatcherRecordContext recordContext : ctx.matcherRecord()) {
             for (ParseTree child : recordContext.children) {
                 if (child instanceof CarstenParser.MatcherBlockContext) {
-                    System.out.println("Matcher block");
                     rules.add(this.visitMatcherBlock((CarstenParser.MatcherBlockContext) child));
                 } else if (child instanceof CarstenParser.ActionLineContext) {
+                    // We don't do anything here right now
+                    // But we can gather the variable assignments here and mix them into the context
                     System.out.println("Action block");
                 }
             }
