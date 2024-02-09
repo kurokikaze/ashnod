@@ -8,12 +8,8 @@ import org.example.ResultValue.UndefinedValue;
 import org.example.ValueTree.RuleBlock;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.luaj.vm2.*;
-import org.luaj.vm2.lib.jse.JsePlatform;
 
-import java.text.DecimalFormat;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 public class Ashnod {
