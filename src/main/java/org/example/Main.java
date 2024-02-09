@@ -41,6 +41,7 @@ public class Main {
             variables.put(set.getKey(), new NumericResultValue(set.getValue(), ""));
         }
 
+        // This is old, see AbstractTest for proper usage
         variables.put("singlePrice", new NumericResultValue(14, "eur"));
         variables.put("volume", new NumericResultValue(3, "m3"));
         variables.put("posSum", new NumericResultValue(2, "eur"));

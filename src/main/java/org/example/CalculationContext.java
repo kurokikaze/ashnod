@@ -43,7 +43,7 @@ public class CalculationContext {
         String unitsOfMeasure = "";
 
         // Here we search for the attributes each time
-        // We will benefit from some sort of the items as an ArrayList of HashMaps, maybe
+        // We can benefit from some sort of the items as an ArrayList of HashMaps, maybe
         for (int i = 0; i < subItems.length(); i++) {
             JSONObject item = subItems.getJSONObject(i);
             JSONArray attributes = item.getJSONArray("attributes");
