@@ -1,0 +1,28 @@
+{
+  "name": "FirstCart - No Frills",
+  "items": [{
+    "name": "Mobile",
+    "attributes": [
+      {
+        "uom": "pc",
+        "name": "volume",
+        "type": "dec",
+        "value": "2.0"
+      },
+      {
+        "uom": "\u20ac/pc",
+        "name": "singlePrice",
+        "type": "dec",
+        "value": "3.33"
+      },
+      {
+        "uom": "pc",
+        "name": "sum",
+        "type": "dec",
+        "value": "5.33"
+      }
+    ],
+    "id": "1"
+  }],
+  "id": "FirstCartNoFrills"
+}

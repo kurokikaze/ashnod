@@ -1,6 +1,7 @@
 package org.example.ValueTree;
 
 import org.example.ResultValue.NumericResultValue;
+import org.example.ResultValue.ResultValue;
 
 import java.util.HashMap;
 
@@ -13,10 +14,14 @@ public class SubtractionNode implements ValueNode {
     }
 
     @Override
-    public NumericResultValue getValue(HashMap<String, Integer> variables) {
-        int leftValue = (int) left.getValue(variables).get();
-        int rightValue = (int) right.getValue(variables).get();
-        System.out.println(leftValue + " - " + rightValue);
-        return new NumericResultValue(leftValue - rightValue);
+    public NumericResultValue getValue(HashMap<String, ResultValue> variables) {
+        ResultValue leftValueNode = left.getValue(variables);
+        double leftValue = (double) leftValueNode.get();
+        ResultValue rightValueNode = right.getValue(variables);
+        double rightValue = (double) rightValueNode.get();
+        if (!leftValueNode.getUnits().equals(rightValueNode.getUnits())) {
+            System.out.println("Subtracting different units of measure: " + leftValueNode.getUnits() + " and " + rightValueNode.getUnits());
+        }
+        return new NumericResultValue(leftValue - rightValue, leftValueNode.getUnits());
     }
 }

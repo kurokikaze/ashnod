@@ -12,7 +12,7 @@ import java.util.HashMap;
     This is where you store the functions you can call from the script file
  */
 public class FunctionSet {
-    public static NumericResultValue Sum(ArrayList<ValueNode> values, HashMap<String, Integer> variables) {
+    public static NumericResultValue Sum(ArrayList<ValueNode> values, HashMap<String, ResultValue> variables) {
         System.out.println("Function call Sum on " + values.size() + " argument(s)");
 
         ResultValue result = values.get(0).getValue(variables);
@@ -22,14 +22,14 @@ public class FunctionSet {
                 sum += value;
             }
 
-            return new NumericResultValue(sum);
+            return new NumericResultValue(sum, "pcs");
         }
-        return new NumericResultValue(0);
+        return new NumericResultValue(0, "pcs");
     }
 
-    public static ArrayResultValue<Integer> sub(ArrayList<ValueNode> values, HashMap<String, Integer> variables) {
+    public static ArrayResultValue<Integer> sub(ArrayList<ValueNode> values, HashMap<String, ResultValue> variables) {
         System.out.println("Function call Sum on " + values.size() + " argument(s)");
 
-        return new ArrayResultValue<>(new ArrayList<Integer>());
+        return new ArrayResultValue<>(new ArrayList<Integer>(), "pcs");
     }
 }

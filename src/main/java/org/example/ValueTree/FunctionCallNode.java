@@ -16,7 +16,7 @@ public class FunctionCallNode implements ValueNode {
     }
 
     @Override
-    public ResultValue getValue(HashMap<String, Integer> variables) {
+    public ResultValue getValue(HashMap<String, ResultValue> variables) {
         switch (this.functionName) {
             case "Sum": {
                 return FunctionSet.Sum(new ArrayList<>(Arrays.asList(args)), variables);

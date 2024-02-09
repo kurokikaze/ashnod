@@ -6,18 +6,16 @@ import org.example.ResultValue.ResultValue;
 import java.util.HashMap;
 
 public class AssignmentNode {
-    private String variableName;
-    private ValueNode value;
+    private final String variableName;
+    private final ValueNode value;
 
     public AssignmentNode(String variableName, ValueNode value) {
         this.variableName = variableName;
         this.value = value;
     }
 
-    public void run(HashMap<String, Integer> variables) {
+    public void run(HashMap<String, ResultValue> variables) {
         ResultValue result = this.value.getValue(variables);
-        if (result instanceof NumericResultValue) {
-            variables.put(variableName, ((NumericResultValue) result).get());
-        }
+        variables.put(variableName, result);
     }
 }

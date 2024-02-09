@@ -1,13 +1,19 @@
 package org.example.ResultValue;
 
 public class NumericResultValue implements ResultValue {
-    private final int value;
+    private final double value;
+    private final String uom;
 
-    public NumericResultValue(int value) {
+    public NumericResultValue(double value, String uom) {
+
         this.value = value;
+        this.uom = uom;
     }
 
-    public Integer get() {
+    public Double get() {
         return this.value;
     }
+    public String getUnits() { return this.uom; }
+
+    public String getType() { return "dec"; }
 }

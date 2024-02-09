@@ -1,0 +1,34 @@
+{
+  "name": "FirstCart - No Frills",
+  "items": [{
+    "name": "Mobile",
+    "attributes": [
+      {
+        "uom": "pc",
+        "name": "volume",
+        "type": "dec",
+        "value": "2.0"
+      },
+      {
+        "uom": "eur",
+        "name": "singlePrice",
+        "type": "dec",
+        "value": "3.33"
+      },
+      {
+        "uom": "pc",
+        "name": "numRatio",
+        "type": "dec",
+        "value": "0.2"
+      },
+      {
+        "uom": "pc/eur",
+        "name": "ratio",
+        "type": "dec",
+        "value": "0.6006006006006006"
+      }
+    ],
+    "id": "1"
+  }],
+  "id": "FirstCartNoFrills"
+}

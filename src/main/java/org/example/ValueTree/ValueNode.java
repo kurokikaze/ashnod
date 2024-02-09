@@ -5,5 +5,5 @@ import org.example.ResultValue.ResultValue;
 import java.util.HashMap;
 
 public interface ValueNode {
-    public ResultValue getValue(HashMap<String, Integer> variables);
+    public ResultValue getValue(HashMap<String, ResultValue> variables);
 }

@@ -5,10 +5,13 @@ import com.carstenGrammar.CarstenParser;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.example.AshnodSetup.AshnodSetup;
+import org.example.ResultValue.NumericResultValue;
+import org.example.ResultValue.ResultValue;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.Map;
 
 // Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
 // then press Enter. You can now see whitespace characters in your code.
@@ -30,12 +33,17 @@ public class Main {
         ValueTreeVisitor visitor = new ValueTreeVisitor();
         AshnodSetup setup = visitor.visitMatcherFile(parser.matcherFile());
 
-        // Dump encountered top-level int variables into the map
-        HashMap<String, Integer> variables = new HashMap<>(setup.initialVariables.intVariables);
 
-        variables.put("singlePrice", 14);
-        variables.put("volume", 3);
-        variables.put("posSum", 2);
+        // Dump encountered top-level int variables into the map
+        HashMap<String, ResultValue> variables = new HashMap<>();
+
+        for(Map.Entry<String, Integer> set: setup.initialVariables.intVariables.entrySet()) {
+            variables.put(set.getKey(), new NumericResultValue(set.getValue(), ""));
+        }
+
+        variables.put("singlePrice", new NumericResultValue(14, "eur"));
+        variables.put("volume", new NumericResultValue(3, "m3"));
+        variables.put("posSum", new NumericResultValue(2, "eur"));
 
         if (!setup.ruleFile.rules.isEmpty()) {
             setup.ruleFile.rules.get(0).run(variables);

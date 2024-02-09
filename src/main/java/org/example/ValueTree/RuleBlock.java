@@ -1,5 +1,7 @@
 package org.example.ValueTree;
 
+import org.example.ResultValue.ResultValue;
+
 import java.util.HashMap;
 import java.util.List;
 
@@ -13,7 +15,7 @@ public class RuleBlock {
         this.actions = actions;
     }
 
-    public HashMap<String, Integer> run(HashMap<String, Integer> variables) {
+    public HashMap<String, ResultValue> run(HashMap<String, ResultValue> variables) {
         for(AssignmentNode action: this.actions) {
             action.run(variables);
         }

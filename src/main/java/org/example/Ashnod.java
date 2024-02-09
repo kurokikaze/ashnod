@@ -1,173 +1,113 @@
 package org.example;
 
+import org.example.AshnodSetup.AshnodSetup;
+import org.example.ResultValue.NumericResultValue;
+import org.example.ResultValue.ResultValue;
+import org.example.ResultValue.StringResultValue;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.luaj.vm2.*;
 import org.luaj.vm2.lib.jse.JsePlatform;
 
+import java.text.DecimalFormat;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 public class Ashnod {
-    public JSONObject calculate(String script, JSONObject data) {
+
+    private final AshnodSetup setup;
+
+    public Ashnod(AshnodSetup setup) {
+        this.setup = setup;
+    }
+
+    public JSONObject calculate(JSONObject data) {
         // From the beginning
 
-        JSONObject meta = data.getJSONObject("meta");
-        JSONArray items = data.getJSONArray("data");
+        JSONObject cart = data.getJSONObject("cart");
+        JSONArray items = cart.getJSONArray("items");
         JSONArray resultItems = new JSONArray();
         for (int i = 0; i < items.length(); i++) {
-            JSONObject itemResult = this.processItem(script, meta, items.getJSONObject(i));
+            JSONObject itemResult = this.processItem(items.getJSONObject(i));
             resultItems.put(itemResult);
         }
 
-        JSONObject result = new JSONObject();
-        result.put("meta", meta);
-        result.put("data", resultItems);
+        JSONObject resultCart = new JSONObject(cart.toMap());
+        resultCart.put("items", resultItems);
 
-        return result;
+        JSONObject resultData = new JSONObject(data.toMap());
+        resultData.put("cart", resultCart);
+
+        return resultCart;
     }
 
-    protected JSONObject processItem(String script, JSONObject meta, JSONObject item) {
-        Globals globals = JsePlatform.standardGlobals();
-        globals.set("foo", LuaValue.valueOf(12));
+    protected JSONObject processItem(JSONObject item) {
+        JSONObject result = new JSONObject(item);
 
-        addFieldsToGlobal(globals, meta);
-        addFieldsToGlobal(globals, item);
-
-        // Use the convenience function on the globals to load a chunk.
-        LuaValue env = globals.load(script, "maven-example");
-        Prototype proto = env.checkclosure().p;
-
-        // Use any of the "call()" or "invoke()" functions directly on the chunk.
-        env.call();
-
-        LuaValue[] globalValues = proto.k;
-
-        for (LuaValue val: globalValues) {
-            String identifier = val.tojstring();
-            LuaValue value = globals.get(identifier);
-            if (!value.isnil() && !value.istable()) {
-                String type = LuaValue.TYPE_NAMES[value.type()];
-                System.out.println(identifier + ' ' + type);
-                switch (type) {
-                    case "number": {
-                        item.put(identifier, value.optdouble(0));
-                        break;
-                    }
-                    case "string": {
-                        item.put(identifier, value);
-                        break;
-                    }
-                    case "boolean": {
-                        item.put(identifier, value.toboolean());
-                    }
-                }
-            } else if (value.istable()) {
-                // Skip Lua's internal String object
-                if (!identifier.equals(LuaValue.TYPE_NAMES[LuaValue.TSTRING])) {
-                    JSONObject subItem = new JSONObject();
-                    this.transformTable((LuaTable) value, subItem);
-                    item.put(identifier, subItem);
-                }
+        if (item.has("items")) {
+            JSONArray items = item.getJSONArray("items");
+            JSONArray resultItems = new JSONArray();
+            for (int i = 0; i < items.length(); i++) {
+                JSONObject itemResult = this.processItem(items.getJSONObject(i));
+                resultItems.put(itemResult);
             }
+            result.put("items", items);
         }
 
+        HashMap<String, ResultValue> variables = this.loadAttributes(item);
+
+        if (!setup.ruleFile.rules.isEmpty()) {
+            setup.ruleFile.rules.get(0).run(variables);
+        }
+        item.put("attributes", saveAttributes(variables));
         return item;
     }
 
-    protected void transformTable(LuaTable table, JSONObject item) {
-        for (LuaValue val: table.keys()) {
-            String identifier = val.tojstring();
-            LuaValue value = table.get(identifier);
-            if (!value.isnil() && !value.istable()) {
-                String type = LuaValue.TYPE_NAMES[value.type()];
-                System.out.println(identifier + ' ' + type);
-                switch (value.type()) {
-                    case LuaValue.TNUMBER: {
-                        item.put(identifier, value.optdouble(0));
-                        break;
-                    }
-                    case LuaValue.TSTRING: {
-                        item.put(identifier, value);
-                        break;
-                    }
-                    case LuaValue.TBOOLEAN: {
-                        item.put(identifier, value.toboolean());
-                    }
-                }
-            } else if (value.istable()) {
-                // Skip Lua's internal object
-                if (!identifier.equals("string")) {
-                    JSONObject subItem = new JSONObject();
-                    // We know it's a table
-                    this.transformTable((LuaTable) value, subItem);
-                    item.put(identifier, subItem);
+    private HashMap<String, ResultValue> loadAttributes(JSONObject item) {
+        HashMap<String, ResultValue> variables = new HashMap<>();
+        if (item.has("attributes")) {
+            JSONArray attributes = item.getJSONArray("attributes");
+            for (int i = 0; i < attributes.length(); i++) {
+                JSONObject attribute = attributes.getJSONObject(i);
+                String attributeType = attribute.getString("type");
+                String attributeName = attribute.getString("name");
+                String attributeUom = attribute.getString("uom");
+                String attributeValue = attribute.getString("value");
+
+                if (attributeType.equals("dec")) {
+                    variables.put(
+                            attributeName,
+                            new NumericResultValue(Double.parseDouble(attributeValue), attributeUom)
+                    );
+                } else {
+                    variables.put(
+                            attributeName,
+                            new StringResultValue(attributeValue, attributeUom)
+                    );
                 }
             }
         }
+        return variables;
     }
-    protected void addFieldsToGlobal(LuaValue globals, JSONObject obj) {
-        Iterator<String> metaKeys = obj.keys();
-        while(metaKeys.hasNext()) {
-            String key = metaKeys.next();
-            Object value = obj.get(key);
+    private JSONArray saveAttributes(HashMap<String, ResultValue> variables) {
+        JSONArray attributes = new JSONArray();
+        for (Map.Entry<String, ResultValue> entry : variables.entrySet()) {
+            String attributeName = entry.getKey();
+            ResultValue value = entry.getValue();
+            String attributeUom = value.getUnits();
+            String attributeType = value.getType();
+            String attributeValue = value.get().toString();
 
-            if (value instanceof Integer) {
-                globals.set(key, LuaValue.valueOf((Integer) value));
-            } else if (value instanceof String) {
-                globals.set(key, LuaValue.valueOf(value.toString()));
-            } else if (value instanceof JSONArray) {
-                System.out.println("Array encountered at identifier " + key);
-            } else if (value == JSONObject.NULL) {
-                globals.set(key, LuaValue.NIL);
-            } else {
-                System.out.println("Object inside");
-                System.out.print(value);
-                // That's where the objects live
-                // Extract the sub-object as a JSONObject
-                JSONObject subObject = obj.getJSONObject(key);
-                LuaTable resultingTable = this.convertObjectToTable(subObject);
+            JSONObject attribute = new JSONObject();
+            attribute.put("name", attributeName);
+            attribute.put("type", attributeType);
+            attribute.put("uom", attributeUom);
+            attribute.put("value", attributeValue);
 
-                LuaValue k = LuaValue.NIL;
-                while ( true ) {
-                    Varargs n = resultingTable.next(k);
-                    if ( (k = n.arg1()).isnil() )
-                        break;
-                    LuaValue v = n.arg(2);
-                    System.out.println(k + " > " + v);
-                }
-                globals.set(LuaValue.valueOf(key), resultingTable);
-            }
+            attributes.put(attribute);
         }
-    }
 
-    protected LuaTable convertObjectToTable(JSONObject sourceObject) {
-        LuaTable result = LuaValue.tableOf();
-//        result.
-        System.out.println("Creating the table");
-        Iterator<String> metaKeys = sourceObject.keys();
-        while(metaKeys.hasNext()) {
-            String key = metaKeys.next();
-            Object value = sourceObject.get(key);
-
-            if (value instanceof Integer) {
-                System.out.println("Integer at " + key);
-                result.hashset(LuaValue.valueOf(key), LuaValue.valueOf((Integer) value));
-            } else if (value instanceof String) {
-                System.out.println("String at " + key);
-                result.hashset(LuaValue.valueOf(key), LuaValue.valueOf(value.toString()));
-            } else if (value instanceof JSONArray) {
-                System.out.println("Array encountered in sub-object at identifier " + key);
-            } else if (value == JSONObject.NULL) {
-                result.hashset(LuaValue.valueOf(key), LuaValue.NIL);
-            } else {
-                System.out.println("Object inside");
-                System.out.print(value);
-                // That's where the objects live
-                // Extract the sub-object as a JSONObject
-                JSONObject subObject = sourceObject.getJSONObject(key);
-                result.hashset(LuaValue.valueOf(key), this.convertObjectToTable(subObject));
-            }
-        }
-        return result;
+        return attributes;
     }
 }

@@ -29,7 +29,7 @@ public class ValueTreeVisitor implements CarstenVisitor {
         for (CarstenParser.MatcherRecordContext recordContext : ctx.matcherRecord()) {
             if (recordContext.actionLine() != null) {
                 System.out.println("Action block");
-
+                // Here we can process top-level assignments
             }
             if (recordContext.matcherBlock() != null) {
                 rules.add(this.visitMatcherBlock(recordContext.matcherBlock()));
@@ -39,7 +39,6 @@ public class ValueTreeVisitor implements CarstenVisitor {
 
         return new AshnodSetup(ruleFile, initialVariables);
     }
-
 
     @Override
     public Object visitActionBlock(CarstenParser.ActionBlockContext ctx) {
@@ -72,7 +71,6 @@ public class ValueTreeVisitor implements CarstenVisitor {
     public ValueNode visitInfixExpr(CarstenParser.InfixExprContext ctx) {
         switch (ctx.op.getType()) {
             case CarstenParser.OP_ADD: {
-                System.out.println("Addition node: " + ctx.left.getText() + " + " + ctx.right.getText());
                 return new AdditionNode(this.visitExpression(ctx.left), this.visitExpression(ctx.right));
             }
             case CarstenParser.OP_SUB: {
