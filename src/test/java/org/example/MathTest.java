@@ -28,6 +28,7 @@ public class MathTest extends AbstractTest {
 
     @Test
     public void MathFormula() throws Exception {
+        // Lol, works
         testScript("math-formula");
     }
 }

@@ -55,11 +55,15 @@ public class Ashnod {
             result.put("items", items);
         }
 
+        // Load the values
         HashMap<String, ResultValue> variables = this.loadAttributes(item);
 
+        // Run the calculations
         if (!setup.ruleFile.rules.isEmpty()) {
             setup.ruleFile.rules.get(0).run(variables);
         }
+
+        // Convert the result
         item.put("attributes", saveAttributes(variables));
         return item;
     }
