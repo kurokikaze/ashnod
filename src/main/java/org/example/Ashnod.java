@@ -15,7 +15,6 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class Ashnod {
-
     private final AshnodSetup setup;
 
     public Ashnod(AshnodSetup setup) {
@@ -45,22 +44,29 @@ public class Ashnod {
     protected JSONObject processItem(JSONObject item) {
         JSONObject result = new JSONObject(item);
 
-        if (item.has("items")) {
-            JSONArray items = item.getJSONArray("items");
+        boolean itemHasSubItems = item.has("items");
+        // This array is created for CalculationContext
+        // even if the item itself has no sub-items
+        JSONArray items = new JSONArray();
+
+        if (itemHasSubItems) {
+            items = item.getJSONArray("items");
             JSONArray resultItems = new JSONArray();
             for (int i = 0; i < items.length(); i++) {
                 JSONObject itemResult = this.processItem(items.getJSONObject(i));
                 resultItems.put(itemResult);
             }
-            result.put("items", items);
         }
+
+        result.put("items", items);
 
         // Load the values
         HashMap<String, ResultValue> variables = this.loadAttributes(item);
 
+        CalculationContext context = new CalculationContext(variables, itemHasSubItems, items);
         // Run the calculations
         if (!setup.ruleFile.rules.isEmpty()) {
-            setup.ruleFile.rules.get(0).run(variables);
+            setup.ruleFile.rules.get(0).run(context);
         }
 
         // Convert the result

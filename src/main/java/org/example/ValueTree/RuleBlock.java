@@ -1,5 +1,6 @@
 package org.example.ValueTree;
 
+import org.example.CalculationContext;
 import org.example.ResultValue.ResultValue;
 
 import java.util.HashMap;
@@ -15,11 +16,11 @@ public class RuleBlock {
         this.actions = actions;
     }
 
-    public HashMap<String, ResultValue> run(HashMap<String, ResultValue> variables) {
+    public CalculationContext run(CalculationContext context) {
         for(AssignmentNode action: this.actions) {
-            action.run(variables);
+            action.run(context);
         }
 
-        return variables;
+        return context;
     }
 }

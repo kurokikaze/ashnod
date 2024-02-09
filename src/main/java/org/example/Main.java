@@ -7,6 +7,7 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.example.AshnodSetup.AshnodSetup;
 import org.example.ResultValue.NumericResultValue;
 import org.example.ResultValue.ResultValue;
+import org.json.JSONArray;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -33,7 +34,6 @@ public class Main {
         ValueTreeVisitor visitor = new ValueTreeVisitor();
         AshnodSetup setup = visitor.visitMatcherFile(parser.matcherFile());
 
-
         // Dump encountered top-level int variables into the map
         HashMap<String, ResultValue> variables = new HashMap<>();
 
@@ -45,8 +45,10 @@ public class Main {
         variables.put("volume", new NumericResultValue(3, "m3"));
         variables.put("posSum", new NumericResultValue(2, "eur"));
 
+        CalculationContext context = new CalculationContext(variables, false, new JSONArray());
+
         if (!setup.ruleFile.rules.isEmpty()) {
-            setup.ruleFile.rules.get(0).run(variables);
+            setup.ruleFile.rules.get(0).run(context);
 
             System.out.println(variables);
         }

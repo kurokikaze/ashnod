@@ -1,5 +1,6 @@
 package org.example.ValueTree;
 
+import org.example.CalculationContext;
 import org.example.ResultValue.NumericResultValue;
 import org.example.ResultValue.ResultValue;
 
@@ -14,8 +15,8 @@ public class AssignmentNode {
         this.value = value;
     }
 
-    public void run(HashMap<String, ResultValue> variables) {
-        ResultValue result = this.value.getValue(variables);
-        variables.put(variableName, result);
+    public void run(CalculationContext context) {
+        ResultValue result = this.value.getValue(context);
+        context.put(variableName, result);
     }
 }

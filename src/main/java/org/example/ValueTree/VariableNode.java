@@ -1,6 +1,6 @@
 package org.example.ValueTree;
 
-import org.example.ResultValue.NumericResultValue;
+import org.example.CalculationContext;
 import org.example.ResultValue.ResultValue;
 
 import java.util.HashMap;
@@ -12,7 +12,8 @@ public class VariableNode implements ValueNode {
         this.variableName = variableName;
     }
 
-    public ResultValue getValue(HashMap<String, ResultValue> variables) {
-        return variables.get(variableName);
+    public String getVariableName() {return this.variableName; }
+    public ResultValue getValue(CalculationContext context) {
+        return context.get(variableName);
     }
 }

@@ -13,6 +13,19 @@
             "value": "65",
             "uom": "deg"
           }
+        ],
+        "items": [      {
+          "name": "Valencia",
+          "id": "1.1",
+          "attributes": [
+            {
+              "name": "celsius",
+              "type": "dec",
+              "value": "23",
+              "uom": "deg"
+            }
+          ]
+        }
         ]
       },
       {

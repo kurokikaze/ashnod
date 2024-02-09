@@ -18,5 +18,5 @@ public class StringResultValue implements ResultValue {
     public String getUnits() { return this.uom; }
 
     @Override
-    public String getType() { return "dec"; }
+    public String getType() { return "string"; }
 }

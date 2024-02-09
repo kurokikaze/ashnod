@@ -1,5 +1,6 @@
 package org.example.ValueTree;
 
+import org.example.CalculationContext;
 import org.example.FunctionSet;
 import org.example.ResultValue.ResultValue;
 
@@ -16,15 +17,15 @@ public class FunctionCallNode implements ValueNode {
     }
 
     @Override
-    public ResultValue getValue(HashMap<String, ResultValue> variables) {
+    public ResultValue getValue(CalculationContext context) {
         switch (this.functionName) {
             case "Sum": {
-                return FunctionSet.Sum(new ArrayList<>(Arrays.asList(args)), variables);
+                return FunctionSet.Sum(new ArrayList<>(Arrays.asList(args)), context);
             }
             case "sub": {
-                return FunctionSet.sub(new ArrayList<>(Arrays.asList(args)), variables);
+                return FunctionSet.sub(new ArrayList<>(Arrays.asList(args)), context);
             }
         }
-        return this.args[0].getValue(variables);
+        return this.args[0].getValue(context);
     }
 }

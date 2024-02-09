@@ -1,5 +1,6 @@
 package org.example.ValueTree;
 
+import org.example.CalculationContext;
 import org.example.ResultValue.NumericResultValue;
 import org.example.ResultValue.ResultValue;
 
@@ -13,10 +14,10 @@ public class AdditionNode implements ValueNode {
         this.right = right;
     }
     @Override
-    public NumericResultValue getValue(HashMap<String, ResultValue> variables) {
-        ResultValue leftValueNode = left.getValue(variables);
+    public NumericResultValue getValue(CalculationContext context) {
+        ResultValue leftValueNode = left.getValue(context);
         double leftValue = (double) leftValueNode.get();
-        ResultValue rightValueNode = right.getValue(variables);
+        ResultValue rightValueNode = right.getValue(context);
         double rightValue = (double) rightValueNode.get();
 
         if (!leftValueNode.getType().equals(rightValueNode.getType())) {

@@ -1,5 +1,6 @@
 package org.example.ValueTree;
 
+import org.example.CalculationContext;
 import org.example.ResultValue.NumericResultValue;
 import org.example.ResultValue.ResultValue;
 
@@ -13,7 +14,7 @@ public class NumberNode implements ValueNode {
     }
 
     @Override
-    public NumericResultValue getValue(HashMap<String, ResultValue> variables) {
+    public NumericResultValue getValue(CalculationContext context) {
         return new NumericResultValue(this.value, "");
     }
 }

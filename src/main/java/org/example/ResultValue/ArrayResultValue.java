@@ -7,7 +7,6 @@ public class ArrayResultValue<T> implements ResultValue {
     private final String uom;
 
     public ArrayResultValue(ArrayList<T> value, String uom ) {
-
         this.value = value;
         this.uom = uom;
     }
@@ -17,6 +16,9 @@ public class ArrayResultValue<T> implements ResultValue {
         return this.value;
     }
 
+    public void add(T value) {
+        this.value.add(value);
+    }
     @Override
     public String getUnits() { return this.uom; }
 
