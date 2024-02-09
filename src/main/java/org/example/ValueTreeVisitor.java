@@ -8,6 +8,10 @@ import org.antlr.v4.runtime.tree.RuleNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.example.AshnodSetup.AshnodSetup;
 import org.example.AshnodSetup.InitialVariables;
+import org.example.MatcherComparator.AbstractComparator;
+import org.example.MatcherComparator.AnyComparator;
+import org.example.MatcherComparator.ExpressionComparator;
+import org.example.MatcherComparator.SimpleExpressionComparator;
 import org.example.ValueTree.*;
 
 import java.util.ArrayList;
@@ -16,10 +20,51 @@ import java.util.List;
 public class ValueTreeVisitor implements CarstenVisitor {
     public RuleBlock visitMatcherBlock(CarstenParser.MatcherBlockContext ctx) {
         List<AssignmentNode> actions = new ArrayList<>();
+        AbstractComparator comparator = new AnyComparator();
+
+        // If it's not the comparator or a solo expression,
+        // let's just treat it as "//*" comparator for now
+        if (ctx.comparativeExpr() instanceof CarstenParser.ComparatorContext) {
+            CarstenParser.ComparatorContext comparisonCtx = (CarstenParser.ComparatorContext) ctx.comparativeExpr();
+            comparator = new ExpressionComparator(
+                    visitExpression(comparisonCtx.left),
+                    visitExpression(comparisonCtx.right),
+                    comparisonCtx.compare.toString()
+            );
+        } else if (ctx.comparativeExpr() instanceof CarstenParser.SoloExprContext) {
+            comparator = new SimpleExpressionComparator(
+                    visitExpression(((CarstenParser.SoloExprContext) ctx.comparativeExpr()).expr())
+            );
+        }
         for (CarstenParser.ActionLineContext actionLine: ctx.actionBlock().actionLine()) {
             actions.add(this.visitActionLine(actionLine));
         }
-        return new RuleBlock(ctx.RULE().toString(), actions);
+        return new RuleBlock(comparator, actions);
+    }
+
+    @Override
+    public Object visitMatcherRuleBlock(CarstenParser.MatcherRuleBlockContext ctx) {
+        return null;
+    }
+
+    @Override
+    public Object visitMatcherAction(CarstenParser.MatcherActionContext ctx) {
+        return null;
+    }
+
+    @Override
+    public Object visitDefaultSelector(CarstenParser.DefaultSelectorContext ctx) {
+        return null;
+    }
+
+    @Override
+    public Object visitComparator(CarstenParser.ComparatorContext ctx) {
+        return null;
+    }
+
+    @Override
+    public Object visitSoloExpr(CarstenParser.SoloExprContext ctx) {
+        return null;
     }
 
     @Override
@@ -27,12 +72,13 @@ public class ValueTreeVisitor implements CarstenVisitor {
         ArrayList<RuleBlock> rules = new ArrayList<>();
         InitialVariables initialVariables = new InitialVariables();
         for (CarstenParser.MatcherRecordContext recordContext : ctx.matcherRecord()) {
-            if (recordContext.actionLine() != null) {
-                System.out.println("Action block");
-                // Here we can process top-level assignments
-            }
-            if (recordContext.matcherBlock() != null) {
-                rules.add(this.visitMatcherBlock(recordContext.matcherBlock()));
+            for (ParseTree child : recordContext.children) {
+                if (child instanceof CarstenParser.MatcherBlockContext) {
+                    System.out.println("Matcher block");
+                    rules.add(this.visitMatcherBlock((CarstenParser.MatcherBlockContext) child));
+                } else if (child instanceof CarstenParser.ActionLineContext) {
+                    System.out.println("Action block");
+                }
             }
         }
         RuleFile ruleFile = new RuleFile(rules);
@@ -91,11 +137,11 @@ public class ValueTreeVisitor implements CarstenVisitor {
         return null;
     }
 
-    @Override
-    public Object visitMatcherRecord(CarstenParser.MatcherRecordContext ctx) {
-        System.out.println("Visiting matcher record");
-        return null;
-    }
+//    @Override
+//    public Object visitMatcherRecord(CarstenParser.MatcherRecordContext ctx) {
+//        System.out.println("Visiting matcher record");
+//        return null;
+//    }
 
     @Override
     public ValueNode visitFuncExpr(CarstenParser.FuncExprContext ctx) {

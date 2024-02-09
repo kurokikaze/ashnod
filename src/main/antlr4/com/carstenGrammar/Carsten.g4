@@ -1,16 +1,16 @@
 grammar Carsten;
 
-matcherRecord
-    : matcherBlock
-    | actionLine
-    ;
-
 matcherFile
     : '{' matcherRecord+ '}' EOF
     ;
 
+matcherRecord
+    : matcherBlock # matcherRuleBlock
+    | actionLine # matcherAction
+    ;
+
 matcherBlock
-    : '[' matchRule=RULE ']' '{' actionBlock '}'
+    : '[' comparativeExpr ']' '{' actionBlock '}'
     ;
 
 actionBlock
@@ -18,7 +18,7 @@ actionBlock
     ;
 
 actionLine
-    :   variable=ID '=' expr
+    :   variable=ID op=OP_COMPARE_EQ expr
     |   variable=ID '=' value=STRING
     ;
 
@@ -33,18 +33,30 @@ expr
 
 atom
     :   value=NUM
+    |   strValue=STRING
     |   variable=ID
+    ;
+
+comparativeExpr
+    : DEFAULT_SELECTOR  # defaultSelector
+    | left=expr compare=compareSymbol right=expr # comparator
+    | expr # soloExpr
     ;
 
 compareSymbol
     : OP_COMPARE_LESS
     | OP_COMPARE_MORE
-    | OP_COMPARE_EQ
+    | OP_COMPARE_LESS_OR_EQ
+    | OP_COMPARE_MORE_OR_EQ
+    | '='
     | OP_COMPARE_NOTEQ
     ;
 
+DEFAULT_SELECTOR: '//*';
 OP_COMPARE_LESS: '<';
 OP_COMPARE_MORE: '>';
+OP_COMPARE_LESS_OR_EQ: '<=';
+OP_COMPARE_MORE_OR_EQ: '>=';
 OP_COMPARE_EQ: '=';
 OP_COMPARE_NOTEQ: '!=';
 
@@ -68,5 +80,4 @@ RPAREN: ')';
 NUM :   [0-9]+;
 ID  :   [_a-zA-Z]+;
 STRING: '"' (~[\r\n"] | '""')* '"';
-RULE: [a-zA-Z0-9="]+ | '//*';
 WS  :   [ \t\r\n] -> channel(HIDDEN);

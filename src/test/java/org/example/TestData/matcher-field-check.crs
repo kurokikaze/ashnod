@@ -1,0 +1,5 @@
+{
+    [needsUpdate] {
+        total = singlePrice * volume
+    }
+}

@@ -1,0 +1,6 @@
+{
+    [singlePrice>2] {
+        ratio = volume / singlePrice
+        numRatio = volume/10
+    }
+}

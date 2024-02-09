@@ -5,6 +5,7 @@ import org.example.ResultValue.NumericResultValue;
 import org.example.ResultValue.ResultValue;
 import org.example.ResultValue.StringResultValue;
 import org.example.ResultValue.UndefinedValue;
+import org.example.ValueTree.RuleBlock;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.luaj.vm2.*;
@@ -66,12 +67,16 @@ public class Ashnod {
 
         CalculationContext context = new CalculationContext(variables, itemHasSubItems, items);
         // Run the calculations
-        if (!setup.ruleFile.rules.isEmpty()) {
-            setup.ruleFile.rules.get(0).run(context);
+        for (RuleBlock rule : setup.ruleFile.rules) {
+            // Check if the item fits the matcher rule
+            if (rule.check(context)) {
+                rule.run(context);
+
+                // Convert the result
+                item.put("attributes", saveAttributes(variables));
+            }
         }
 
-        // Convert the result
-        item.put("attributes", saveAttributes(variables));
         return item;
     }
 

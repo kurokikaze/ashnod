@@ -1,17 +1,15 @@
 package org.example.ValueTree;
 
 import org.example.CalculationContext;
-import org.example.ResultValue.ResultValue;
-
-import java.util.HashMap;
+import org.example.MatcherComparator.AbstractComparator;
 import java.util.List;
 
 public class RuleBlock {
     private final List<AssignmentNode> actions;
 
-    private final String rule;
+    private final AbstractComparator rule;
 
-    public RuleBlock(String rule, List<AssignmentNode> actions) {
+    public RuleBlock(AbstractComparator rule, List<AssignmentNode> actions) {
         this.rule = rule;
         this.actions = actions;
     }
@@ -22,5 +20,9 @@ public class RuleBlock {
         }
 
         return context;
+    }
+
+    public boolean check(CalculationContext context) {
+        return rule.compare(context);
     }
 }

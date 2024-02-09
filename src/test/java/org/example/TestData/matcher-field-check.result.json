@@ -1,0 +1,54 @@
+{
+  "name": "FirstCart - No Frills",
+  "items": [
+    {
+      "name": "Mobile",
+      "attributes": [
+        {
+          "uom": "pc",
+          "name": "volume",
+          "type": "dec",
+          "value": "2"
+        },
+        {
+          "uom": "eur",
+          "name": "singlePrice",
+          "type": "dec",
+          "value": "3"
+        }
+      ],
+      "id": "1"
+    },
+    {
+      "name": "Mobile (needs update)",
+      "attributes": [
+        {
+          "uom": "pc",
+          "name": "volume",
+          "type": "dec",
+          "value": "2.0"
+        },
+        {
+          "uom": "eur",
+          "name": "singlePrice",
+          "type": "dec",
+          "value": "1.0"
+        },
+        {
+          "uom": "eur",
+          "name": "total",
+          "type": "dec",
+          "value": "2.0"
+        },
+        {
+          "uom": "pc",
+          "name": "needsUpdate",
+          "type": "dec",
+          "value": "1.0"
+        }
+      ],
+      "id": "1"
+    }
+  ],
+  "id": "FirstCartNoFrills"
+}
