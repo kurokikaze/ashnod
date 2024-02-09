@@ -1,0 +1,6 @@
+{
+    [//*] {
+        ratio = volume / singlePrice
+        numRatio = volume/10
+    }
+}

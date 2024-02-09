@@ -3,6 +3,7 @@ package org.example.ValueTree;
 import org.example.CalculationContext;
 import org.example.FunctionSet;
 import org.example.ResultValue.ResultValue;
+import org.example.ResultValue.UndefinedValue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,6 +21,8 @@ public class FunctionCallNode implements ValueNode {
     public ResultValue getValue(CalculationContext context) {
         switch (this.functionName) {
             case "Sum": {
+                // If sum sees undefined as an incoming value, we know the item doesn't have sub items at all
+                // It's not the same as seeing 0 here
                 return FunctionSet.Sum(new ArrayList<>(Arrays.asList(args)), context);
             }
             case "sub": {

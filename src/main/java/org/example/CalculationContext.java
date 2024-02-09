@@ -3,6 +3,7 @@ package org.example;
 import org.example.ResultValue.ArrayResultValue;
 import org.example.ResultValue.NumericResultValue;
 import org.example.ResultValue.ResultValue;
+import org.example.ResultValue.UndefinedValue;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -25,7 +26,12 @@ public class CalculationContext {
     }
 
     public ResultValue get(String key) {
-        return variables.get(key);
+        if (variables.containsKey(key)) {
+            return variables.get(key);
+        }
+
+        // If we don't have the variable, it resolves to undefined
+        return new UndefinedValue();
     }
 
     public void put(String key, ResultValue value) {

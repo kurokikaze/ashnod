@@ -4,6 +4,7 @@ import org.example.AshnodSetup.AshnodSetup;
 import org.example.ResultValue.NumericResultValue;
 import org.example.ResultValue.ResultValue;
 import org.example.ResultValue.StringResultValue;
+import org.example.ResultValue.UndefinedValue;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.luaj.vm2.*;
@@ -105,17 +106,22 @@ public class Ashnod {
         for (Map.Entry<String, ResultValue> entry : variables.entrySet()) {
             String attributeName = entry.getKey();
             ResultValue value = entry.getValue();
-            String attributeUom = value.getUnits();
-            String attributeType = value.getType();
-            String attributeValue = value.get().toString();
 
             JSONObject attribute = new JSONObject();
-            attribute.put("name", attributeName);
-            attribute.put("type", attributeType);
-            attribute.put("uom", attributeUom);
-            attribute.put("value", attributeValue);
+            // We skip all variables that resolve to UndefinedValue
+            // For example, this skips all Sum results on leaf items
+            if (!(value instanceof UndefinedValue)) {
+                String attributeUom = value.getUnits();
+                String attributeType = value.getType();
+                String attributeValue = value.get().toString();
 
-            attributes.put(attribute);
+                attribute.put("name", attributeName);
+                attribute.put("type", attributeType);
+                attribute.put("uom", attributeUom);
+                attribute.put("value", attributeValue);
+
+                attributes.put(attribute);
+            }
         }
 
         return attributes;

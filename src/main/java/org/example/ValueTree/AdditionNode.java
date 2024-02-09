@@ -3,6 +3,7 @@ package org.example.ValueTree;
 import org.example.CalculationContext;
 import org.example.ResultValue.NumericResultValue;
 import org.example.ResultValue.ResultValue;
+import org.example.ResultValue.UndefinedValue;
 
 import java.util.HashMap;
 
@@ -14,10 +15,16 @@ public class AdditionNode implements ValueNode {
         this.right = right;
     }
     @Override
-    public NumericResultValue getValue(CalculationContext context) {
+    public ResultValue getValue(CalculationContext context) {
         ResultValue leftValueNode = left.getValue(context);
-        double leftValue = (double) leftValueNode.get();
         ResultValue rightValueNode = right.getValue(context);
+
+        // If either of components is undefined, result is undefined
+        if (leftValueNode instanceof UndefinedValue || rightValueNode instanceof UndefinedValue) {
+            return new UndefinedValue();
+        }
+
+        double leftValue = (double) leftValueNode.get();
         double rightValue = (double) rightValueNode.get();
 
         if (!leftValueNode.getType().equals(rightValueNode.getType())) {

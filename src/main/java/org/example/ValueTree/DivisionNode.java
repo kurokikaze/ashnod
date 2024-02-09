@@ -3,6 +3,7 @@ package org.example.ValueTree;
 import org.example.CalculationContext;
 import org.example.ResultValue.NumericResultValue;
 import org.example.ResultValue.ResultValue;
+import org.example.ResultValue.UndefinedValue;
 
 import java.util.HashMap;
 
@@ -15,12 +16,17 @@ public class DivisionNode implements ValueNode {
     }
 
     @Override
-    public NumericResultValue getValue(CalculationContext context) {
+    public ResultValue getValue(CalculationContext context) {
         ResultValue leftValueNode = left.getValue(context);
         double leftValue = (double) leftValueNode.get();
         ResultValue rightValueNode = right.getValue(context);
         double rightValue = (double) rightValueNode.get();
 
+        // Division by 0 resolves to undefined
+        // Probably better to throw here
+        if (rightValue == 0) {
+            return new UndefinedValue();
+        }
         return new NumericResultValue(
             leftValue / rightValue,
             this.getResultingUnits(leftValueNode, rightValueNode)

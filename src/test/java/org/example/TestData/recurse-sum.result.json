@@ -20,38 +20,22 @@
     "items": [
       {
         "name": "Kitchen sink",
-        "attributes": [
-          {
-            "uom": "",
-            "name": "total",
-            "type": "dec",
-            "value": "0.0"
-          },
-          {
-            "uom": "usd",
-            "name": "price",
-            "type": "dec",
-            "value": "10.0"
-          }
-        ],
+        "attributes": [{
+          "uom": "usd",
+          "name": "price",
+          "type": "dec",
+          "value": "10.0"
+        }],
         "id": "1.1"
       },
       {
         "name": "Bowl",
-        "attributes": [
-          {
-            "uom": "",
-            "name": "total",
-            "type": "dec",
-            "value": "0.0"
-          },
-          {
-            "uom": "usd",
-            "name": "price",
-            "type": "dec",
-            "value": "2.0"
-          }
-        ],
+        "attributes": [{
+          "uom": "usd",
+          "name": "price",
+          "type": "dec",
+          "value": "2.0"
+        }],
         "id": "1.2"
       }
     ]

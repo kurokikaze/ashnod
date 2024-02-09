@@ -27,6 +27,11 @@ public class MathTest extends AbstractTest {
     }
 
     @Test
+    public void SimpleMathDivisionByZero() throws Exception {
+        testScript("math-div-by-zero");
+    }
+
+    @Test
     public void MathFormula() throws Exception {
         // Lol, works
         testScript("math-formula");
