@@ -21,20 +21,27 @@ public class ExpressionComparator implements AbstractComparator {
 
     @Override
     public boolean compare(CalculationContext context) {
-        System.out.println("Expression compare");
         ResultValue leftValue = left.getValue(context);
         ResultValue rightValue = right.getValue(context);
 
         // If any of the operands resolve to Undefined, comparison fails
         // Except maybe something != UndefinedValue should return true?
         if (leftValue instanceof UndefinedValue || rightValue instanceof UndefinedValue) {
-            System.out.println("Undefined drop");
             return false;
         }
 
         switch (operator) {
             case "=": {
-                return (leftValue.get() == rightValue.get());
+                Object left = leftValue.get();
+                Object right = rightValue.get();
+
+                // Here goes comparison casting
+                // If any one is a string, cast both to strings
+                if (left instanceof String || right instanceof String) {
+                    return left.toString().equals(right.toString());
+                }
+                // There can be additional options of comparing arrays for example
+                return (left == right);
             }
             case ">": {
                 if (leftValue instanceof NumericResultValue && rightValue instanceof NumericResultValue) {

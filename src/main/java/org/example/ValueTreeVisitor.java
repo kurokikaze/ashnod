@@ -26,10 +26,11 @@ public class ValueTreeVisitor implements CarstenVisitor {
         // let's just treat it as "//*" comparator for now
         if (ctx.comparativeExpr() instanceof CarstenParser.ComparatorContext) {
             CarstenParser.ComparatorContext comparisonCtx = (CarstenParser.ComparatorContext) ctx.comparativeExpr();
+
             comparator = new ExpressionComparator(
                     visitExpression(comparisonCtx.left),
                     visitExpression(comparisonCtx.right),
-                    comparisonCtx.compare.toString()
+                    comparisonCtx.compare.getText()
             );
         } else if (ctx.comparativeExpr() instanceof CarstenParser.SoloExprContext) {
             comparator = new SimpleExpressionComparator(
@@ -138,12 +139,6 @@ public class ValueTreeVisitor implements CarstenVisitor {
         return null;
     }
 
-//    @Override
-//    public Object visitMatcherRecord(CarstenParser.MatcherRecordContext ctx) {
-//        System.out.println("Visiting matcher record");
-//        return null;
-//    }
-
     @Override
     public ValueNode visitFuncExpr(CarstenParser.FuncExprContext ctx) {
         ValueNode[] args = new ValueNode[]{
@@ -166,7 +161,12 @@ public class ValueTreeVisitor implements CarstenVisitor {
     public ValueNode visitAtom(CarstenParser.AtomContext ctx) {
         if (ctx.value != null) {
             return new NumberNode(Integer.valueOf(ctx.value.getText()));
+        } else if (ctx.strValue != null) {
+            String rawString = ctx.strValue.getText();
+            // Remove leading and trailing doublequote from the string token
+            return new StringNode(rawString.substring(1, rawString.length() - 1));
         }
+
         return new VariableNode(ctx.variable.getText());
     }
 

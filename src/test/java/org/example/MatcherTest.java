@@ -17,4 +17,9 @@ public class MatcherTest extends AbstractTest {
     public void MatcherFieldCheckTest() throws Exception {
         testScript("matcher-field-check");
     }
+
+    @Test
+    public void MatcherCompareStringTest() throws Exception {
+        testScript("matcher-compare-string");
+    }
 }

@@ -1,0 +1,5 @@
+{
+    [madeIn="China"] {
+        total = singlePrice * volume
+    }
+}

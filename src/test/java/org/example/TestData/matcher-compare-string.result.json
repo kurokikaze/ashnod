@@ -17,16 +17,16 @@
           "value": "3.0"
         },
         {
-          "uom": "pc",
-          "name": "numRatio",
+          "uom": "eur",
+          "name": "total",
           "type": "dec",
-          "value": "0.2"
+          "value": "6.0"
         },
         {
-          "uom": "pc/eur",
-          "name": "ratio",
-          "type": "dec",
-          "value": "0.6666666666666666"
+          "uom": "",
+          "name": "madeIn",
+          "type": "string",
+          "value": "China"
         }
       ],
       "id": "1"
