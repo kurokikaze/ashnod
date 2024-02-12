@@ -24,6 +24,8 @@ public class Ashnod {
 
         JSONObject cart = data.getJSONObject("cart");
         JSONArray items = cart.getJSONArray("items");
+
+        // Process items in the cart one-by-one
         JSONArray resultItems = new JSONArray();
         for (int i = 0; i < items.length(); i++) {
             JSONObject itemResult = this.processItem(items.getJSONObject(i));
@@ -42,6 +44,8 @@ public class Ashnod {
     protected JSONObject processItem(JSONObject item) {
         JSONObject result = new JSONObject(item);
 
+        // This goes recursively over sub-items, processing them one-by-one
+        // It's important to do the sub-items before the item itself, so `sub()` will get the correct values
         boolean itemHasSubItems = item.has("items");
         // This array is created for CalculationContext
         // even if the item itself has no sub-items
@@ -66,6 +70,10 @@ public class Ashnod {
         for (RuleBlock rule : setup.ruleFile.rules) {
             // Check if the item fits the matcher rule
             if (rule.check(context)) {
+                // If we want to exclude the sub-items when the parent items fails the matcher cherk,
+                // just move the upper subItems processing block here
+
+                // Otherwise, just run the rule on the item
                 rule.run(context);
 
                 // Convert the result
@@ -82,26 +90,33 @@ public class Ashnod {
             JSONArray attributes = item.getJSONArray("attributes");
             for (int i = 0; i < attributes.length(); i++) {
                 JSONObject attribute = attributes.getJSONObject(i);
-                String attributeType = attribute.getString("type");
                 String attributeName = attribute.getString("name");
-                String attributeUom = attribute.getString("uom");
-                String attributeValue = attribute.getString("value");
+                variables.put(
+                    attributeName,
+                    this.convertAttribute(attribute)
+                );
 
-                if (attributeType.equals("dec")) {
-                    variables.put(
-                            attributeName,
-                            new NumericResultValue(Double.parseDouble(attributeValue), attributeUom)
-                    );
-                } else {
-                    variables.put(
-                            attributeName,
-                            new StringResultValue(attributeValue, attributeUom)
-                    );
-                }
             }
         }
         return variables;
     }
+
+    /*
+        Here we convert the JSON object into the ResultValue
+        Right now it's missing the ArrayResultValue I guess
+     */
+    private ResultValue convertAttribute(JSONObject attribute) {
+        String attributeType = attribute.getString("type");
+        String attributeUom = attribute.getString("uom");
+        String attributeValue = attribute.getString("value");
+
+        if (attributeType.equals("dec")) {
+            return new NumericResultValue(Double.parseDouble(attributeValue), attributeUom);
+        } else {
+            return new StringResultValue(attributeValue, attributeUom);
+        }
+    }
+
     private JSONArray saveAttributes(HashMap<String, ResultValue> variables) {
         JSONArray attributes = new JSONArray();
         for (Map.Entry<String, ResultValue> entry : variables.entrySet()) {
