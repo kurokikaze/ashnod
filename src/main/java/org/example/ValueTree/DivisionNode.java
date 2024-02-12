@@ -3,9 +3,7 @@ package org.example.ValueTree;
 import org.example.CalculationContext;
 import org.example.ResultValue.NumericResultValue;
 import org.example.ResultValue.ResultValue;
-import org.example.ResultValue.UndefinedValue;
-
-import java.util.HashMap;
+import org.example.ResultValue.UndefinedResultValue;
 
 public class DivisionNode implements ValueNode {
     private final ValueNode left;
@@ -25,7 +23,7 @@ public class DivisionNode implements ValueNode {
         // Division by 0 resolves to undefined
         // Probably better to throw here
         if (rightValue == 0) {
-            return new UndefinedValue();
+            return new UndefinedResultValue();
         }
         return new NumericResultValue(
             leftValue / rightValue,

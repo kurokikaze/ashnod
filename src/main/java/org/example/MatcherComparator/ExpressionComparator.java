@@ -3,8 +3,7 @@ package org.example.MatcherComparator;
 import org.example.CalculationContext;
 import org.example.ResultValue.NumericResultValue;
 import org.example.ResultValue.ResultValue;
-import org.example.ResultValue.UndefinedValue;
-import org.example.ValueTree.NumberNode;
+import org.example.ResultValue.UndefinedResultValue;
 import org.example.ValueTree.ValueNode;
 
 public class ExpressionComparator implements AbstractComparator {
@@ -26,7 +25,7 @@ public class ExpressionComparator implements AbstractComparator {
 
         // If any of the operands resolve to Undefined, comparison fails
         // Except maybe something != UndefinedValue should return true?
-        if (leftValue instanceof UndefinedValue || rightValue instanceof UndefinedValue) {
+        if (leftValue instanceof UndefinedResultValue || rightValue instanceof UndefinedResultValue) {
             return false;
         }
 

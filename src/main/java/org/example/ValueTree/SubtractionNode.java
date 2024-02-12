@@ -3,9 +3,7 @@ package org.example.ValueTree;
 import org.example.CalculationContext;
 import org.example.ResultValue.NumericResultValue;
 import org.example.ResultValue.ResultValue;
-import org.example.ResultValue.UndefinedValue;
-
-import java.util.HashMap;
+import org.example.ResultValue.UndefinedResultValue;
 
 public class SubtractionNode implements ValueNode {
     private final ValueNode left;
@@ -21,8 +19,8 @@ public class SubtractionNode implements ValueNode {
         ResultValue rightValueNode = right.getValue(context);
 
         // If either of components is undefined, result is undefined
-        if (leftValueNode instanceof UndefinedValue || rightValueNode instanceof UndefinedValue) {
-            return new UndefinedValue();
+        if (leftValueNode instanceof UndefinedResultValue || rightValueNode instanceof UndefinedResultValue) {
+            return new UndefinedResultValue();
         }
 
         double leftValue = (double) leftValueNode.get();

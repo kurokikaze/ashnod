@@ -2,7 +2,7 @@ package org.example.MatcherComparator;
 
 import org.example.CalculationContext;
 import org.example.ResultValue.ResultValue;
-import org.example.ResultValue.UndefinedValue;
+import org.example.ResultValue.UndefinedResultValue;
 import org.example.ValueTree.ValueNode;
 
 public class SimpleExpressionComparator implements AbstractComparator {
@@ -15,6 +15,6 @@ public class SimpleExpressionComparator implements AbstractComparator {
     public boolean compare(CalculationContext context) {
         ResultValue result = expr.getValue(context);
 
-        return (!(result instanceof UndefinedValue));
+        return (!(result instanceof UndefinedResultValue));
     }
 }

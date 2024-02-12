@@ -1,6 +1,6 @@
 package org.example.ResultValue;
 
-public class UndefinedValue implements ResultValue {
+public class UndefinedResultValue implements ResultValue {
     @Override
     public Object get() {
         return null;

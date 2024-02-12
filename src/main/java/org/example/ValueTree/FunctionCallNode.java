@@ -3,11 +3,9 @@ package org.example.ValueTree;
 import org.example.CalculationContext;
 import org.example.FunctionSet;
 import org.example.ResultValue.ResultValue;
-import org.example.ResultValue.UndefinedValue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 
 public class FunctionCallNode implements ValueNode {
     private final String functionName;

@@ -1,9 +1,8 @@
 package org.example;
 
 import org.example.ResultValue.ArrayResultValue;
-import org.example.ResultValue.NumericResultValue;
 import org.example.ResultValue.ResultValue;
-import org.example.ResultValue.UndefinedValue;
+import org.example.ResultValue.UndefinedResultValue;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -31,7 +30,7 @@ public class CalculationContext {
         }
 
         // If we don't have the variable, it resolves to undefined
-        return new UndefinedValue();
+        return new UndefinedResultValue();
     }
 
     public void put(String key, ResultValue value) {

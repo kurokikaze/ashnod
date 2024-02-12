@@ -4,7 +4,7 @@ import org.example.AshnodSetup.AshnodSetup;
 import org.example.ResultValue.NumericResultValue;
 import org.example.ResultValue.ResultValue;
 import org.example.ResultValue.StringResultValue;
-import org.example.ResultValue.UndefinedValue;
+import org.example.ResultValue.UndefinedResultValue;
 import org.example.ValueTree.RuleBlock;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -126,7 +126,7 @@ public class Ashnod {
             JSONObject attribute = new JSONObject();
             // We skip all variables that resolve to UndefinedValue
             // For example, this skips all Sum results on leaf items
-            if (!(value instanceof UndefinedValue)) {
+            if (!(value instanceof UndefinedResultValue)) {
                 String attributeUom = value.getUnits();
                 String attributeType = value.getType();
                 String attributeValue = value.get().toString();
