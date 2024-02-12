@@ -10,7 +10,8 @@ import org.example.ValueTree.VariableNode;
 import java.util.ArrayList;
 
 /*
-    This is where you store the functions you can call from the script file
+    This is where you store the functions you can call from the script file.
+    Each function takes an array of its arguments as well as the CalculationContext
  */
 public class FunctionSet {
     public static ResultValue Sum(ArrayList<ValueNode> values, CalculationContext context) {
@@ -21,12 +22,39 @@ public class FunctionSet {
             return result;
         }
         if (result instanceof ArrayResultValue) {
-            int sum = 0;
+            double sum = 0;
             for(double value: ((ArrayResultValue<Double>) result).get()) {
                 sum += value;
             }
 
             return new NumericResultValue(sum, result.getUnits());
+        }
+        // Default result is a zero of unspecified unit
+        return new NumericResultValue(0, "");
+    }
+
+    // This is just a test implementation of the Avg()
+    public static ResultValue Avg(ArrayList<ValueNode> values, CalculationContext context) {
+        ResultValue result = values.get(0).getValue(context);
+        // If sum sees undefined as an incoming value, we know the item doesn't have sub items at all
+        // It's not the same as seeing 0 here
+        if (result instanceof UndefinedResultValue) {
+            return result;
+        }
+        if (result instanceof ArrayResultValue) {
+            double sum = 0;
+            ArrayList<Double> numberValues = ((ArrayResultValue<Double>) result).get();
+
+            // Early return in case we have 0 items in the ArrayResult
+            if (numberValues.size() == 0) {
+                return new NumericResultValue(0, "");
+            }
+
+            for(double value: numberValues) {
+                sum += value;
+            }
+
+            return new NumericResultValue(sum / numberValues.size(), result.getUnits());
         }
         // Default result is a zero of unspecified unit
         return new NumericResultValue(0, "");

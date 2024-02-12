@@ -23,5 +23,6 @@ public class ArrayResultValue<T> implements ResultValue {
     public String getUnits() { return this.uom; }
 
     @Override
+    // This should depend on the array content, this is just a placeholder
     public String getType() { return "dec"; }
 }
