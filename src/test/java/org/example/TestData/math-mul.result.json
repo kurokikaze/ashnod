@@ -10,7 +10,7 @@
         "value": "2.0"
       },
       {
-        "uom": "\u20ac/pc",
+        "uom": "eur/pc",
         "name": "singlePrice",
         "type": "dec",
         "value": "3.33"

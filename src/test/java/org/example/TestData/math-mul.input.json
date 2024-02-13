@@ -14,7 +14,7 @@
         "name":  "singlePrice",
         "type":  "dec",
         "value": "3.33",
-        "uom":   "€/pc"
+        "uom":   "eur/pc"
       } ]
     } ]
   }
